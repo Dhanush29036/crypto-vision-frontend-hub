@@ -10,7 +10,7 @@ import {
   SidebarMenuItem,
   SidebarFooter,
 } from "@/components/ui/sidebar";
-import { Home, TrendingUp, LogIn, User, FileText, News, Settings } from "lucide-react";
+import { Home, TrendingUp, LogIn, User, FileText, Newspaper, Settings } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
@@ -49,7 +49,7 @@ const items = [
   {
     title: "News",
     url: "/news",
-    icon: News,
+    icon: Newspaper,
   },
 ];
 
