@@ -12,9 +12,12 @@ import NotFound from "./pages/NotFound";
 import { AuthProvider, useAuth } from "@/context/AuthContext";
 import LoginSignup from "./pages/LoginSignup";
 import { Layout } from "@/components/layout/layout";
+import Profile from "./pages/Profile";
+import Tools from "./pages/Tools";
+import Settings from "./pages/Settings";
+import News from "./pages/News";
 import { useEffect } from "react";
 
-// Optional: Wrapping children to provide auth required routes
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAuth();
   
@@ -26,53 +29,95 @@ function PrivateRoute({ children }: { children: React.ReactNode }) {
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <ThemeProvider defaultTheme="dark">
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner position="top-right" />
-        <AuthProvider>
-          <BrowserRouter>
-            <Routes>
-              {/* Login/Signup (Public) */}
-              <Route path="/login" element={<LoginSignup />} />
+const App = () => {
+  const { isAuthenticated } = useAuth();
 
-              {/* Main app: Require authentication */}
-              <Route
-                path="/"
-                element={
-                  <PrivateRoute>
-                    <Index />
-                  </PrivateRoute>
-                }
-              />
-              <Route
-                path="/market"
-                element={
-                  <PrivateRoute>
-                    <Market />
-                  </PrivateRoute>
-                }
-              />
-              <Route
-                path="/predictions"
-                element={
-                  <PrivateRoute>
-                    <Predictions />
-                  </PrivateRoute>
-                }
-              />
-              {/* Add more pages as needed (portfolio, dashboard, settings, news, profile, etc.) */}
+  // If not authenticated, redirect to login
+  useEffect(() => {
+    if (!isAuthenticated) {
+      window.location.pathname = "/login";
+    }
+  }, [isAuthenticated]);
 
-              {/* 404 */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
-        </AuthProvider>
-      </TooltipProvider>
-    </QueryClientProvider>
-  </ThemeProvider>
-);
+  return (
+    <ThemeProvider defaultTheme="dark">
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner position="top-right" />
+          <AuthProvider>
+            <BrowserRouter>
+              <Routes>
+                {/* Login/Signup (Public) */}
+                <Route path="/login" element={<LoginSignup />} />
+
+                {/* Main app: Require authentication */}
+                <Route
+                  path="/"
+                  element={
+                    <PrivateRoute>
+                      <Index />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/market"
+                  element={
+                    <PrivateRoute>
+                      <Market />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/predictions"
+                  element={
+                    <PrivateRoute>
+                      <Predictions />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/profile"
+                  element={
+                    <PrivateRoute>
+                      <Profile />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/tools"
+                  element={
+                    <PrivateRoute>
+                      <Tools />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/settings"
+                  element={
+                    <PrivateRoute>
+                      <Settings />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/news"
+                  element={
+                    <PrivateRoute>
+                      <News />
+                    </PrivateRoute>
+                  }
+                />
+
+                {/* 404 */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </BrowserRouter>
+          </AuthProvider>
+        </TooltipProvider>
+      </QueryClientProvider>
+    </ThemeProvider>
+  );
+};
 
 export default App;
