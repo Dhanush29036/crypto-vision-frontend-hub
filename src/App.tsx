@@ -1,3 +1,4 @@
+// App.tsx
 
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -9,7 +10,7 @@ import Index from "./pages/Index";
 import Market from "./pages/Market";
 import Predictions from "./pages/Predictions";
 import NotFound from "./pages/NotFound";
-import { AuthProvider, useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/context/AuthContext";
 import LoginSignup from "./pages/LoginSignup";
 import { Layout } from "@/components/layout/layout";
 import Profile from "./pages/Profile";
@@ -18,10 +19,10 @@ import Settings from "./pages/Settings";
 import News from "./pages/News";
 import { useEffect } from "react";
 
+// --- PrivateRoute ---
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAuth();
   
-  // Immediately redirect if not authenticated
   if (!isAuthenticated) return <Navigate to="/login" replace />;
   
   return <Layout>{children}</Layout>;
@@ -29,10 +30,9 @@ function PrivateRoute({ children }: { children: React.ReactNode }) {
 
 const queryClient = new QueryClient();
 
-const App = () => {
+const AppContent = () => {
   const { isAuthenticated } = useAuth();
 
-  // If not authenticated, redirect to login
   useEffect(() => {
     if (!isAuthenticated) {
       window.location.pathname = "/login";
@@ -45,79 +45,84 @@ const App = () => {
         <TooltipProvider>
           <Toaster />
           <Sonner position="top-right" />
-          <AuthProvider>
-            <BrowserRouter>
-              <Routes>
-                {/* Login/Signup (Public) */}
-                <Route path="/login" element={<LoginSignup />} />
-
-                {/* Main app: Require authentication */}
-                <Route
-                  path="/"
-                  element={
-                    <PrivateRoute>
-                      <Index />
-                    </PrivateRoute>
-                  }
-                />
-                <Route
-                  path="/market"
-                  element={
-                    <PrivateRoute>
-                      <Market />
-                    </PrivateRoute>
-                  }
-                />
-                <Route
-                  path="/predictions"
-                  element={
-                    <PrivateRoute>
-                      <Predictions />
-                    </PrivateRoute>
-                  }
-                />
-                <Route
-                  path="/profile"
-                  element={
-                    <PrivateRoute>
-                      <Profile />
-                    </PrivateRoute>
-                  }
-                />
-                <Route
-                  path="/tools"
-                  element={
-                    <PrivateRoute>
-                      <Tools />
-                    </PrivateRoute>
-                  }
-                />
-                <Route
-                  path="/settings"
-                  element={
-                    <PrivateRoute>
-                      <Settings />
-                    </PrivateRoute>
-                  }
-                />
-                <Route
-                  path="/news"
-                  element={
-                    <PrivateRoute>
-                      <News />
-                    </PrivateRoute>
-                  }
-                />
-
-                {/* 404 */}
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </BrowserRouter>
-          </AuthProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/login" element={<LoginSignup />} />
+              <Route
+                path="/"
+                element={
+                  <PrivateRoute>
+                    <Index />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/market"
+                element={
+                  <PrivateRoute>
+                    <Market />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/predictions"
+                element={
+                  <PrivateRoute>
+                    <Predictions />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/profile"
+                element={
+                  <PrivateRoute>
+                    <Profile />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/tools"
+                element={
+                  <PrivateRoute>
+                    <Tools />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/settings"
+                element={
+                  <PrivateRoute>
+                    <Settings />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/news"
+                element={
+                  <PrivateRoute>
+                    <News />
+                  </PrivateRoute>
+                }
+              />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
         </TooltipProvider>
       </QueryClientProvider>
     </ThemeProvider>
   );
 };
 
+// --- FINAL export ---
+import { AuthProvider } from "@/context/AuthContext";
+
+const App = () => {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
+  );
+};
+
 export default App;
+
