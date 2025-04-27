@@ -12,11 +12,15 @@ import NotFound from "./pages/NotFound";
 import { AuthProvider, useAuth } from "@/context/AuthContext";
 import LoginSignup from "./pages/LoginSignup";
 import { Layout } from "@/components/layout/layout";
+import { useEffect } from "react";
 
 // Optional: Wrapping children to provide auth required routes
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAuth();
+  
+  // Immediately redirect if not authenticated
   if (!isAuthenticated) return <Navigate to="/login" replace />;
+  
   return <Layout>{children}</Layout>;
 }
 
@@ -27,7 +31,7 @@ const App = () => (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Toaster />
-        <Sonner />
+        <Sonner position="top-right" />
         <AuthProvider>
           <BrowserRouter>
             <Routes>

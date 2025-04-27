@@ -1,5 +1,5 @@
 
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, ReactNode, useEffect } from "react";
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -24,10 +24,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setIsAuthenticated(true);
     localStorage.setItem("crypto-auth", "true");
   };
+  
   const logout = () => {
     setIsAuthenticated(false);
     localStorage.removeItem("crypto-auth");
   };
+
+  // For debugging
+  useEffect(() => {
+    console.log("Auth state changed:", isAuthenticated);
+  }, [isAuthenticated]);
 
   return (
     <AuthContext.Provider value={{ isAuthenticated, login, logout }}>

@@ -2,18 +2,31 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 export default function LoginSignup() {
   const { login } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    
+    // Simulate async login
     setTimeout(() => {
-      login();
-    }, 800); // Simulate async
+      try {
+        login();
+        toast.success(isLogin ? "Successfully signed in!" : "Account created successfully!");
+        navigate("/"); // Redirect to home page after successful login
+      } catch (error) {
+        toast.error("Authentication failed. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    }, 800);
   };
 
   return (
